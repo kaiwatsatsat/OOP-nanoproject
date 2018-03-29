@@ -3,8 +3,139 @@ import java.io.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
 
 
+class SelectMonth extends JFrame implements ActionListener
+{
+    JLabel mon,yer;
+    JPanel p;
+    JComboBox jcb;
+    JTextField tf;
+    SelectMonth()
+    {
+        setVisible(true);
+        mon=new JLabel();
+        yer=new JLabel();
+        tf=new JTextField();
+        p=new JPanel(new GridLayout(2,2));
+        jcb= new JComboBox<>();
+        jcb.setModel(new DefaultComboBoxModel<>(new String[] {"January","February","March","April","May","June","July","August","September","October","November","December" }));
+        mon.setFont(new Font("Tahoma", 0, 15));
+        mon.setText("Month:");
+        yer.setFont(new Font("Tahoma", 0, 15));
+        yer.setText("Year:");
+        tf.setFont(new Font("Tahoma",0,15));
+        tf.setText("");
+        
+        p.setSize(240, 120);
+        add(p);
+        p.add(mon);
+        p.add(yer);
+        p.add(jcb);
+        p.add(tf);
+        setSize(239,119);
+        setSize(240,120);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setResizable(false);
+        
+        tf.addActionListener(this);
+        jcb.addActionListener(this);
+    }
+    @Override
+    public void actionPerformed(ActionEvent ee)
+    {
+        if(ee.getSource()==jcb)
+        {
+            JComboBox temp=(JComboBox)ee.getSource();
+            NanoOOP.tempmonth=(String)temp.getSelectedItem();
+        }
+        if(ee.getSource()==tf)
+        {
+           try{ Integer i=new Integer(tf.getText());
+            NanoOOP.tempyear=i.intValue();}
+            catch(Exception eee){}
+           dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+        }
+    }
+}
+
+class Income_Expense //implements ActionListener
+{  
+    JFrame f;
+    JTabbedPane inexp_buttons;
+    GridLayout income_grid,expense_grid;
+    JLabel n;
+    JTextField amount,amount1;
+    Font font1;
+    JPanel income_panel,expense_panel;
+    JList<String> list;
+        
+    Income_Expense ()
+    {  
+        f = new JFrame();
+        income_grid = new GridLayout(3,4);
+        expense_grid = new GridLayout(3,4);
+        amount = new JTextField();
+        font1 = new Font("SansSerif", Font.BOLD, 20);
+        amount.setFont(font1);
+        amount1 = new JTextField();
+        amount1.setFont(font1);
+        inexp_buttons = new JTabbedPane();
+        
+        income_panel= new JPanel();
+        income_panel.setLayout(income_grid);
+        income_panel.setBackground(Color.cyan);
+        
+        expense_panel= new JPanel();
+        expense_panel.setLayout(income_grid);
+        expense_panel.setBackground(Color.green);
+        //////////////////////////////////////////////////////////////
+        income_panel.add(new JLabel(" "));
+        n = new JLabel("AMOUNT : ");
+        income_panel.add(n);
+        income_panel.add(amount1);
+        income_panel.add(new JLabel(" "));
+        income_panel.add(new JLabel(" "));
+        n = new JLabel(" TYPE : ");income_panel.add(n);
+        String[] arr ={" CHEQUE "," CASH : "};
+        list = new JList<>(arr);
+        income_panel.add(list);
+        income_panel.add(new JLabel(" "));
+        income_panel.add(new JLabel(" "));
+        JButton x = new JButton("ADD");
+        income_panel.add(x);x = new JButton("CANCEL");income_panel.add(x);
+        income_panel.add(new JLabel(" "));
+        //////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////////////
+        expense_panel.add(new JLabel(" "));
+        n = new JLabel("AMOUNT : ");
+        expense_panel.add(n);expense_panel.add(amount);
+        expense_panel.add(new JLabel(" "));
+        expense_panel.add(new JLabel(" "));
+        n = new JLabel(" TYPE : ");expense_panel.add(n);
+        list = new JList<>(arr);
+        expense_panel.add(list);
+        expense_panel.add(new JLabel(" "));
+        expense_panel.add(new JLabel(" "));
+        x = new JButton("ADD");
+        expense_panel.add(x);x = new JButton("CANCEL");expense_panel.add(x);
+        expense_panel.add(new JLabel(" "));
+        //////////////////////////////////////////////////////////////
+          
+        inexp_buttons.add(" INCOME ",income_panel);
+        inexp_buttons.add(" EXPENSE ",expense_panel);
+      
+       
+        f.add(inexp_buttons);  
+        f.setSize(350,200);
+        f.setVisible(true); 
+
+        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
+}
+/************************************************************************************************************************************************/
  class DashBoard extends JFrame implements ActionListener
 {
     JButton button1,button2,button3,button4;
@@ -62,7 +193,7 @@ import java.awt.*;
         
         l5.setFont(new Font("Tahoma", 0, 20)); 
         l5.setHorizontalAlignment(SwingConstants.CENTER);
-        l5.setText("December-2015");
+        l5.setText(NanoOOP.tempmonth+"-"+NanoOOP.tempyear);
         
         ta.setBackground(new Color(51, 255, 204));
         ta.setColumns(20);
@@ -115,25 +246,60 @@ import java.awt.*;
         mitem.addActionListener(this);
     }
     @Override
-    public void actionPerformed(ActionEvent e)
+    public void actionPerformed(ActionEvent e) 
     {
-        if(e.getSource()==mitem)
+     /*   if(e.getSource()==mitem)
         {
            new Kartikclass();
-        }
+        }*/
         if(e.getSource()==button1)
         {
             new Income_Expense();
         }
+        if(e.getSource()==button4)
+        {
+            new SelectMonth();   
+        }
     }
+     void refresh()
+    {
+        l5.setText(NanoOOP.tempmonth+"-"+NanoOOP.tempyear);
+    }
+  
 }
 
+class Refresher implements Runnable
+{
+    Thread t;
+    DashBoard temp;
+    Refresher(DashBoard tt)
+    {
+        t=new Thread(this,"");
+        temp=tt;
+    }
+   @Override
+   public void run()
+   {
+       while(true)
+       {
+           try{Thread.sleep(3000);}catch(Exception ee){}
+           temp.refresh();
+       }
+   }
+}
 
 public class NanoOOP {
-
+    static String tempmonth="January";
+    static int tempyear=2000;
+   
     
     public static void main(String[] args) {
-        new DashBoard();
+        
+         DashBoard gg=new DashBoard();
+         Refresher r=new Refresher(gg);
+         r.t.start();
+         
     }
     
 }
+
