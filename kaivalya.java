@@ -5,6 +5,217 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+/******************************************************************************************************************************/
+
+
+class Login implements ActionListener
+{
+    
+    JFrame f;
+    JPanel p;
+    JButton signup;
+    JButton login;
+    JTextField uname = new JTextField();
+    JPasswordField passw = new JPasswordField();
+    final JLabel un = new JLabel("Username:             ");
+    final JLabel pswd = new JLabel("Password:           ");
+    final JLabel or = new JLabel("        Or");
+    final JLabel emp = new JLabel("");
+    public Login()
+    {
+        f = new JFrame("Login");
+        f.setLayout(new FlowLayout());
+        f.setSize(300,300);
+        p = new JPanel(new GridLayout(4,2,20,20));
+        p.setSize(300,300);
+        f.add(p);
+        p.add(un); 
+        p.add(uname);
+        p.add(pswd); 
+        p.add(passw);
+        login = new JButton("Login"); login.addActionListener(this);
+        uname.addActionListener(this);
+        passw.addActionListener(this);
+        p.add(login);
+        p.add(or);
+        uname.setText("");
+        passw.setText("");
+        signup = new JButton("Signup"); 
+        p.add(signup); signup.addActionListener(this);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        f.setLocation(dim.width/2-f.getSize().width/2, dim.height/2-f.getSize().height/2);
+    }
+    public void actionPerformed(ActionEvent e)
+    {
+        if(e.getSource()==signup)
+        {
+            new Signup();
+        }
+        
+        if(e.getSource()==login)
+        {
+            System.out.println("kaka");
+            //yahape DB se check bhi krna chihiye ki username exist karta h ya nahi//
+            if(NanoOOP.username==null||NanoOOP.pass==null)
+            {
+                   new ErrorForLogin();return;//
+                   //f.dispatchEvent(new WindowEvent(f,WindowEvent.WINDOW_CLOSING));
+            } 
+            
+             NanoOOP.gg=new DashBoard();
+             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+             NanoOOP.gg.setLocation(dim.width/2-NanoOOP.gg.getSize().width/2, dim.height/2-NanoOOP.gg.getSize().height/2);
+            f.dispatchEvent(new WindowEvent(f,WindowEvent.WINDOW_CLOSING));
+        }
+        if(e.getSource()==uname)
+        {
+            System.out.println("mama");
+            NanoOOP.username=uname.getText();
+        }
+        if(e.getSource()==passw)
+        {
+            NanoOOP.pass=passw.getText();
+        }
+        /*String user = uname.getText();
+        String pass = passw.getText();
+        if(user==""||pass=="")
+            new LoginError();
+        System.out.println(user+"\t"+pass);*/
+        
+    }
+}
+
+
+
+
+class Signup implements ActionListener
+{
+    private JFrame f;
+    JPanel p;
+    private JButton register;
+    private JTextField uname = new JTextField();
+    private JPasswordField passw = new JPasswordField();
+    private final JLabel un = new JLabel("Username:             ");
+    private final JLabel pswd = new JLabel("Password:           ");
+    public Signup()
+    {
+        f = new JFrame("Sign Up");
+        f.setLayout(new FlowLayout());
+        f.setSize(300,300);
+        p = new JPanel(new GridLayout(4,2,20,20));
+        p.setSize(300,300);
+        uname.setText("");
+        passw.setText("");
+        f.add(p);
+        p.add(un); 
+        p.add(uname);
+        p.add(pswd); 
+        p.add(passw);
+        register = new JButton("Register"); 
+        p.add(register); register.addActionListener(this);
+        uname.addActionListener(this);
+        passw.addActionListener(this);
+        f.setVisible(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        f.setLocation(dim.width/2-f.getSize().width/2, dim.height/2-f.getSize().height/2);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e1)
+    {
+        if(e1.getSource()==uname)
+        {
+            System.out.println("kaka");
+            NanoOOP.freshuname=uname.getText();
+        }
+        if(e1.getSource()==passw)
+        {
+            System.out.println("mama");
+            NanoOOP.freshpass=passw.getText();
+        }
+        if(e1.getSource()==register)
+        {
+            if(NanoOOP.freshpass==null||NanoOOP.freshuname==null)
+            {
+                new ErrorForSignUp();return;
+                
+            }
+            f.dispatchEvent(new WindowEvent(f,WindowEvent.WINDOW_CLOSING));
+        }
+    }
+}
+
+class ErrorForSignUp extends JFrame implements ActionListener
+{
+    JPanel p;
+    JLabel l;
+    JButton ok;
+    ErrorForSignUp()
+    {
+        p=new JPanel(new GridLayout(2,1));
+        l=new JLabel("Enter a valid username or password");
+        ok=new JButton("OK");
+        l.setFont(new Font("Tahoma", 0, 18));
+        ok.setFont(new Font("Tahoma", 0, 18));
+        setLayout(new FlowLayout());
+        add(p);
+        p.add(l);
+        p.add(ok);
+        setVisible(true);
+        setSize(310,130);
+        p.setSize(310,130);
+        ok.addActionListener(this);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+    }
+    @Override
+    public void actionPerformed(ActionEvent eve)
+    {
+        if(eve.getSource()==ok)
+        {
+            dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+        }
+    }
+}
+class ErrorForLogin extends JFrame implements ActionListener
+{
+    JPanel p;
+    JLabel l;
+    JButton ok;
+    ErrorForLogin()
+    {
+        JFrame f;
+        
+        p=new JPanel(new GridLayout(2,1));
+        l=new JLabel("Enter a valid username or password");
+        ok=new JButton("OK");
+        l.setFont(new Font("Tahoma", 0, 18));
+        ok.setFont(new Font("Tahoma", 0, 18));
+        setLayout(new FlowLayout());
+        add(p);
+        p.add(l);
+        p.add(ok);
+        setVisible(true);
+        setSize(310,130);
+        p.setSize(310,130);
+        ok.addActionListener(this);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+    }
+    @Override
+    public void actionPerformed(ActionEvent eve)
+    {
+        if(eve.getSource()==ok)
+        {
+            dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+        }
+    }
+}
+
+/******************************************************************************************************************************/
+
+
 
 class SelectMonth extends JFrame implements ActionListener
 {    
@@ -78,10 +289,12 @@ class Income_Expense implements ActionListener
     JComboBox in_catagories,ex_catagories;
     com.toedter.calendar.JDateChooser cal1,cal2;
     
+    
     Income_Expense ()
     {  
         cal1 =new com.toedter.calendar.JDateChooser();
         cal2 =new com.toedter.calendar.JDateChooser();
+        
         f = new JFrame();
         income_grid = new GridLayout(5,4);
         expense_grid = new GridLayout(5,4);
@@ -310,7 +523,7 @@ class Income_Expense implements ActionListener
     void refresh()
     {
         l5.setText(NanoOOP.tempmonth+"-"+NanoOOP.tempyear);
-        System.out.println(NanoOOP.amount_entered+" "+NanoOOP.coice_in_category+" "+NanoOOP.where);
+        System.out.println(NanoOOP.date+" "+NanoOOP.month+" "+NanoOOP.year+" "+NanoOOP.count );
     }
 }
 
@@ -328,8 +541,8 @@ class Refresher implements Runnable
    {
        while(true)
        {
-           try{Thread.sleep(3000);}catch(Exception ee){}
-           temp.refresh();
+           try{Thread.sleep(500);}catch(Exception ee){}
+           try{NanoOOP.gg.refresh();}catch(Exception eee){}
        }
    }
 }
@@ -342,12 +555,17 @@ public class NanoOOP {
     static int where=0,coice_in_category;// where(1-income,2-expense) //what we chose 
     static int count=0;        //count tells us how many entries we added from keshavs window.This is gonna be used when storing in database//
     static int date,month,year;//all int 
+    static String username=null,pass=null;
+    static String freshuname=null,freshpass=null;
+    static boolean freshlyregistered=false;
     //
+    static DashBoard gg;
     public static void main(String[] args) 
     {
-         DashBoard gg=new DashBoard();
+        /* DashBoard gg=new DashBoard();
          Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-         gg.setLocation(dim.width/2-gg.getSize().width/2, dim.height/2-gg.getSize().height/2);
+         gg.setLocation(dim.width/2-gg.getSize().width/2, dim.height/2-gg.getSize().height/2);*/
+        new Login();
          Refresher r=new Refresher(gg);
          r.t.start();
     }    
