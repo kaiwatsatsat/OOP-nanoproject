@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
-
 class SelectMonth extends JFrame implements ActionListener
 {
     JLabel mon,yer;
@@ -37,7 +36,7 @@ class SelectMonth extends JFrame implements ActionListener
         setSize(239,119);
         setSize(240,120);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         
@@ -151,9 +150,8 @@ class Income_Expense implements ActionListener
         f.add(inexp_buttons);  
         f.setSize(350,200);
         f.setVisible(true); 
-
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    }
+}
 
     @Override
     public void actionPerformed(ActionEvent e) 
@@ -161,10 +159,10 @@ class Income_Expense implements ActionListener
         try{f.setVisible(false);
             Integer i;
             if(e.getSource()==income_add)
-            {NanoOOP.where=1;NanoOOP.coice_in_category=in_catagories.getSelectedIndex();
+            {NanoOOP.where=1;NanoOOP.coice_in_category=in_catagories.getSelectedIndex();NanoOOP.count++;
              i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue();}
             else if(e.getSource()==expense_add)
-            {NanoOOP.where=2;NanoOOP.coice_in_category=ex_catagories.getSelectedIndex();
+            {NanoOOP.where=2;NanoOOP.coice_in_category=ex_catagories.getSelectedIndex();NanoOOP.count++;
              i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue();}
             else{NanoOOP.where=0;}
             }
@@ -247,16 +245,16 @@ class Income_Expense implements ActionListener
         add(p);
         setVisible(true);
         setResizable(false);
-        setSize(557,830);
+        setSize(560,750);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         p.setSize(550,800);
         
         p.add(button1);
-        button1.setBounds(440, 667, 110, 103);
+        button1.setBounds(440, 587, 110, 103);
         p.add(button2);
-        button2.setBounds(0, 680, 220, 90);
+        button2.setBounds(0, 600, 220, 90);
         p.add(button3);
-        button3.setBounds(199, 620, 140, 40);
+        button3.setBounds(199, 540, 140, 40);
         p.add(l1);
         l1.setBounds(10, 90, 100, 30);
         p.add(button4);
@@ -289,20 +287,15 @@ class Income_Expense implements ActionListener
            new Kartikclass();
         }*/
         if(e.getSource()==button1)
-        {
             new Income_Expense();
-        }
         if(e.getSource()==button4)
-        {
             new SelectMonth();   
-        }
     }
-     void refresh()
+    void refresh()
     {
         l5.setText(NanoOOP.tempmonth+"-"+NanoOOP.tempyear);
         System.out.println(NanoOOP.amount_entered+" "+NanoOOP.coice_in_category+" "+NanoOOP.where);
     }
-  
 }
 
 class Refresher implements Runnable
@@ -324,19 +317,17 @@ class Refresher implements Runnable
        }
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class NanoOOP {
     static String tempmonth="January";
     static int tempyear=2000;
     static int amount_entered,where=0,coice_in_category,count=0;// 1-income //2-expense//count tells us how many entries we added from keshavs window.This is gonna be used when storing in database//
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) 
+    {
          DashBoard gg=new DashBoard();
          Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
          gg.setLocation(dim.width/2-gg.getSize().width/2, dim.height/2-gg.getSize().height/2);
          Refresher r=new Refresher(gg);
          r.t.start();
-         
-    }
-    
+    }    
 }
