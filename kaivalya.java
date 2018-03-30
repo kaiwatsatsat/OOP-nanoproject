@@ -1,4 +1,5 @@
 package nanooop;
+
 import java.io.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,7 +7,7 @@ import java.awt.*;
 import java.util.*;
 
 class SelectMonth extends JFrame implements ActionListener
-{
+{    
     JLabel mon,yer;
     JPanel p;
     JComboBox jcb;
@@ -61,6 +62,8 @@ class SelectMonth extends JFrame implements ActionListener
     }
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 class Income_Expense implements ActionListener
 {  
     JFrame f;
@@ -73,12 +76,15 @@ class Income_Expense implements ActionListener
     JPanel income_panel,expense_panel;
     JList<String> list;
     JComboBox in_catagories,ex_catagories;
+    com.toedter.calendar.JDateChooser cal1,cal2;
     
     Income_Expense ()
     {  
+        cal1 =new com.toedter.calendar.JDateChooser();
+        cal2 =new com.toedter.calendar.JDateChooser();
         f = new JFrame();
-        income_grid = new GridLayout(4,4);
-        expense_grid = new GridLayout(4,4);
+        income_grid = new GridLayout(5,4);
+        expense_grid = new GridLayout(5,4);
         amount = new JTextField();
         font1 = new Font("SansSerif", Font.BOLD, 20);
         amount.setFont(font1);
@@ -94,8 +100,10 @@ class Income_Expense implements ActionListener
         expense_panel.setLayout(income_grid);
         expense_panel.setBackground(Color.green);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();                          //this and the following line is used to make window open in center//
-         f.setLocation(dim.width/2-f.getSize().width/2, dim.height/2-f.getSize().height/2);
+        f.setLocation(dim.width/2-f.getSize().width/2-200, dim.height/2-f.getSize().height/2-300);
         //////////////////////////////////////////////////////////////
+        income_panel.add(new JLabel(" "));income_panel.add(new JLabel(" "));income_panel.add(new JLabel(" "));
+        income_panel.add(cal1); 
         income_panel.add(new JLabel(" "));
         n = new JLabel("AMOUNT : ");
         income_panel.add(n);
@@ -120,6 +128,8 @@ class Income_Expense implements ActionListener
         //////////////////////////////////////////////////////////////
 
         //////////////////////////////////////////////////////////////
+        expense_panel.add(new JLabel(" "));expense_panel.add(new JLabel(" "));expense_panel.add(new JLabel(" "));
+        expense_panel.add(cal2); 
         expense_panel.add(new JLabel(" "));
         n = new JLabel("AMOUNT : ");
         expense_panel.add(n);expense_panel.add(amount);
@@ -146,9 +156,8 @@ class Income_Expense implements ActionListener
         inexp_buttons.add(" EXPENSE ",expense_panel);
         income_add.addActionListener(this);
         expense_add.addActionListener(this);
-        x.addActionListener(this);y.addActionListener(this);//cancel
         f.add(inexp_buttons);  
-        f.setSize(350,200);
+        f.setSize(500,250);
         f.setVisible(true); 
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 }
@@ -159,12 +168,18 @@ class Income_Expense implements ActionListener
         try{f.setVisible(false);
             Integer i;
             if(e.getSource()==income_add)
-            {NanoOOP.where=1;NanoOOP.coice_in_category=in_catagories.getSelectedIndex();NanoOOP.count++;
-             i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue();}
+            { NanoOOP.where=1;NanoOOP.coice_in_category=in_catagories.getSelectedIndex();
+              NanoOOP.count++;NanoOOP.date=cal1.getDate().getDate();
+              NanoOOP.month=cal1.getDate().getMonth();NanoOOP.year=1900+cal1.getDate().getYear();
+              i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue(); }
+            
             else if(e.getSource()==expense_add)
-            {NanoOOP.where=2;NanoOOP.coice_in_category=ex_catagories.getSelectedIndex();NanoOOP.count++;
-             i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue();}
-            else{NanoOOP.where=0;}
+            { NanoOOP.where=2;NanoOOP.coice_in_category=ex_catagories.getSelectedIndex();
+              NanoOOP.count++;NanoOOP.date=cal2.getDate().getDate();
+              NanoOOP.month=cal2.getDate().getMonth();NanoOOP.year=1900+cal2.getDate().getYear();
+              i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue(); } 
+            
+            else{NanoOOP.where=0;} //cancel
             }
         catch(Exception eee){}
     }
@@ -179,6 +194,7 @@ class Income_Expense implements ActionListener
     JMenu menu;
     JMenuItem mitem;
     JPanel p;
+    
     DashBoard()
     {
         p=new JPanel(null);
@@ -317,11 +333,16 @@ class Refresher implements Runnable
        }
    }
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 public class NanoOOP {
     static String tempmonth="January";
     static int tempyear=2000;
-    static int amount_entered,where=0,coice_in_category,count=0;// 1-income //2-expense//count tells us how many entries we added from keshavs window.This is gonna be used when storing in database//
+    //
+    static int amount_entered;
+    static int where=0,coice_in_category;// where(1-income,2-expense) //what we chose 
+    static int count=0;        //count tells us how many entries we added from keshavs window.This is gonna be used when storing in database//
+    static int date,month,year;//all int 
+    //
     public static void main(String[] args) 
     {
          DashBoard gg=new DashBoard();
