@@ -38,6 +38,8 @@ class SelectMonth extends JFrame implements ActionListener
         setSize(240,120);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         
         tf.addActionListener(this);
         jcb.addActionListener(this);
@@ -92,6 +94,8 @@ class Income_Expense implements ActionListener
         expense_panel= new JPanel();
         expense_panel.setLayout(income_grid);
         expense_panel.setBackground(Color.green);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();                          //this and the following line is used to make window open in center//
+         f.setLocation(dim.width/2-f.getSize().width/2, dim.height/2-f.getSize().height/2);
         //////////////////////////////////////////////////////////////
         income_panel.add(new JLabel(" "));
         n = new JLabel("AMOUNT : ");
@@ -296,6 +300,7 @@ class Income_Expense implements ActionListener
      void refresh()
     {
         l5.setText(NanoOOP.tempmonth+"-"+NanoOOP.tempyear);
+        System.out.println(NanoOOP.amount_entered+" "+NanoOOP.coice_in_category+" "+NanoOOP.where);
     }
   
 }
@@ -323,10 +328,12 @@ class Refresher implements Runnable
 public class NanoOOP {
     static String tempmonth="January";
     static int tempyear=2000;
-    static int amount_entered,where=0,coice_in_category;// 1-income //2-expense
+    static int amount_entered,where=0,coice_in_category,count=0;// 1-income //2-expense//count tells us how many entries we added from keshavs window.This is gonna be used when storing in database//
     public static void main(String[] args) {
         
          DashBoard gg=new DashBoard();
+         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+         gg.setLocation(dim.width/2-gg.getSize().width/2, dim.height/2-gg.getSize().height/2);
          Refresher r=new Refresher(gg);
          r.t.start();
          
