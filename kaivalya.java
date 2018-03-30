@@ -38,6 +38,8 @@ class SelectMonth extends JFrame implements ActionListener
         setSize(240,120);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         
         tf.addActionListener(this);
         jcb.addActionListener(this);
@@ -60,7 +62,7 @@ class SelectMonth extends JFrame implements ActionListener
     }
 }
 
-class Income_Expense //implements ActionListener
+class Income_Expense implements ActionListener
 {  
     JFrame f;
     JTabbedPane inexp_buttons;
@@ -68,14 +70,16 @@ class Income_Expense //implements ActionListener
     JLabel n;
     JTextField amount,amount1;
     Font font1;
+    JButton income_add,expense_add;
     JPanel income_panel,expense_panel;
     JList<String> list;
-        
+    JComboBox in_catagories,ex_catagories;
+    
     Income_Expense ()
     {  
         f = new JFrame();
-        income_grid = new GridLayout(3,4);
-        expense_grid = new GridLayout(3,4);
+        income_grid = new GridLayout(4,4);
+        expense_grid = new GridLayout(4,4);
         amount = new JTextField();
         font1 = new Font("SansSerif", Font.BOLD, 20);
         amount.setFont(font1);
@@ -90,21 +94,29 @@ class Income_Expense //implements ActionListener
         expense_panel= new JPanel();
         expense_panel.setLayout(income_grid);
         expense_panel.setBackground(Color.green);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();                          //this and the following line is used to make window open in center//
+         f.setLocation(dim.width/2-f.getSize().width/2, dim.height/2-f.getSize().height/2);
         //////////////////////////////////////////////////////////////
         income_panel.add(new JLabel(" "));
         n = new JLabel("AMOUNT : ");
         income_panel.add(n);
         income_panel.add(amount1);
+        income_panel.add(new JLabel(" "));income_panel.add(new JLabel(" "));
+        n = new JLabel("CATAGORY : ");
+        income_panel.add(n);
+        in_catagories= new JComboBox<>();
+        in_catagories.setModel(new DefaultComboBoxModel<>(new String[] {"SALARY","BONUS","LOTTERY","ADD-ONS"}));
+        income_panel.add(in_catagories);
         income_panel.add(new JLabel(" "));
         income_panel.add(new JLabel(" "));
         n = new JLabel(" TYPE : ");income_panel.add(n);
-        String[] arr ={" CHEQUE "," CASH : "};
+        String[] arr ={" CHEQUE "," CASH "};
         list = new JList<>(arr);
         income_panel.add(list);
         income_panel.add(new JLabel(" "));
         income_panel.add(new JLabel(" "));
-        JButton x = new JButton("ADD");
-        income_panel.add(x);x = new JButton("CANCEL");income_panel.add(x);
+        income_add = new JButton("ADD");
+        income_panel.add(income_add);JButton x = new JButton("CANCEL");income_panel.add(x);
         income_panel.add(new JLabel(" "));
         //////////////////////////////////////////////////////////////
 
@@ -114,25 +126,49 @@ class Income_Expense //implements ActionListener
         expense_panel.add(n);expense_panel.add(amount);
         expense_panel.add(new JLabel(" "));
         expense_panel.add(new JLabel(" "));
+        n = new JLabel("CATAGORY : ");
+        expense_panel.add(n);
+        ex_catagories= new JComboBox<>();
+        ex_catagories.setModel(new DefaultComboBoxModel<>(new String[] {"FUN","EDUCATION","TRAVELLING","BILLS","RENT","OTHER"}));
+        expense_panel.add(ex_catagories);
+        expense_panel.add(new JLabel(" "));
+        expense_panel.add(new JLabel(" "));
         n = new JLabel(" TYPE : ");expense_panel.add(n);
         list = new JList<>(arr);
         expense_panel.add(list);
         expense_panel.add(new JLabel(" "));
         expense_panel.add(new JLabel(" "));
-        x = new JButton("ADD");
-        expense_panel.add(x);x = new JButton("CANCEL");expense_panel.add(x);
+        expense_add = new JButton("ADD");
+        expense_panel.add(expense_add);JButton y = new JButton("CANCEL");expense_panel.add(y);
         expense_panel.add(new JLabel(" "));
         //////////////////////////////////////////////////////////////
           
         inexp_buttons.add(" INCOME ",income_panel);
         inexp_buttons.add(" EXPENSE ",expense_panel);
-      
-       
+        income_add.addActionListener(this);
+        expense_add.addActionListener(this);
+        x.addActionListener(this);y.addActionListener(this);//cancel
         f.add(inexp_buttons);  
         f.setSize(350,200);
         f.setVisible(true); 
 
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        try{f.setVisible(false);
+            Integer i;
+            if(e.getSource()==income_add)
+            {NanoOOP.where=1;NanoOOP.coice_in_category=in_catagories.getSelectedIndex();
+             i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue();}
+            else if(e.getSource()==expense_add)
+            {NanoOOP.where=2;NanoOOP.coice_in_category=ex_catagories.getSelectedIndex();
+             i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue();}
+            else{NanoOOP.where=0;}
+            }
+        catch(Exception eee){}
     }
 }
 /************************************************************************************************************************************************/
@@ -264,6 +300,7 @@ class Income_Expense //implements ActionListener
      void refresh()
     {
         l5.setText(NanoOOP.tempmonth+"-"+NanoOOP.tempyear);
+        System.out.println(NanoOOP.amount_entered+" "+NanoOOP.coice_in_category+" "+NanoOOP.where);
     }
   
 }
@@ -291,15 +328,15 @@ class Refresher implements Runnable
 public class NanoOOP {
     static String tempmonth="January";
     static int tempyear=2000;
-   
-    
+    static int amount_entered,where=0,coice_in_category,count=0;// 1-income //2-expense//count tells us how many entries we added from keshavs window.This is gonna be used when storing in database//
     public static void main(String[] args) {
         
          DashBoard gg=new DashBoard();
+         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+         gg.setLocation(dim.width/2-gg.getSize().width/2, dim.height/2-gg.getSize().height/2);
          Refresher r=new Refresher(gg);
          r.t.start();
          
     }
     
 }
-
