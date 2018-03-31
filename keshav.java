@@ -15,8 +15,6 @@ class LoginForm extends javax.swing.JFrame implements ActionListener,MouseListen
 
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -103,8 +101,6 @@ class LoginForm extends javax.swing.JFrame implements ActionListener,MouseListen
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelRegister;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
 
@@ -116,13 +112,15 @@ class LoginForm extends javax.swing.JFrame implements ActionListener,MouseListen
             NanoOOP.pass = jPasswordField1.getText();
             System.out.println(NanoOOP.username+" "+NanoOOP.pass);
             System.out.println("kaka");
+            System.out.println(NanoOOP.pass.length() + " " + NanoOOP.pass + " . " +NanoOOP.username.length()+ " "+NanoOOP.username);
+                
             //yahape DB se check bhi krna chihiye ki username exist karta h ya nahi//
-            if(NanoOOP.username==null ||NanoOOP.pass==null)
+            if(NanoOOP.username.length()==0 ||NanoOOP.pass.length()==0)
             {
                    new ErrorForLogin();return;//
                    //f.dispatchEvent(new WindowEvent(f,WindowEvent.WINDOW_CLOSING));
             } 
-            
+            //if(!Macthedfromdb)new ErrorForLogin();return;
              NanoOOP.gg=new DashBoard();
              Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
              NanoOOP.gg.setLocation(dim.width/2-NanoOOP.gg.getSize().width/2, dim.height/2-NanoOOP.gg.getSize().height/2);
@@ -130,7 +128,7 @@ class LoginForm extends javax.swing.JFrame implements ActionListener,MouseListen
         }
         if(e.getSource()==jButton2)
         {
-            
+            System.exit(0);
         }
     }
 
@@ -298,17 +296,18 @@ class RegisterForm extends javax.swing.JFrame implements ActionListener,MouseLis
     @Override
     public void actionPerformed(ActionEvent e) {
         try{
-            setVisible(false);
             if(e.getSource()==jButtonRegister)
             {
                 NanoOOP.freshuname= jTextField1.getText();
                 NanoOOP.freshpass= jPasswordField1.getText();
-               
-                if(NanoOOP.freshpass==null||NanoOOP.freshuname==null)
+                System.out.println(NanoOOP.freshpass.length() + " " + NanoOOP.freshpass + " . " +NanoOOP.freshuname.length()+ " "+NanoOOP.freshuname);
+                if(NanoOOP.freshpass.length() == 0 ||NanoOOP.freshuname.length() == 0 || jTextField2.getText().length()==0 || jTextField3.getText().length()==0 || NanoOOP.freshpass.compareTo(jPasswordField2.getText())!=0)
                 {
                     new ErrorForSignUp();return;
                 
                 }        
+            setVisible(false);
+            //enter in database
             }
             
             else if(e.getSource()==jButton2)
@@ -375,7 +374,7 @@ class ErrorForLogin extends JFrame implements ActionListener
         JFrame f;
         
         p=new JPanel(new GridLayout(2,1));
-        l=new JLabel("Enter a valid username or password");
+        l=new JLabel("INVALID valid username or password");
         ok=new JButton("OK");
         l.setFont(new Font("Tahoma", 0, 18));
         ok.setFont(new Font("Tahoma", 0, 18));
