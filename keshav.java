@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.*;
 /******************************************************************************************************************************/
 
-class LoginForm extends javax.swing.JFrame implements ActionListener {
+class LoginForm extends javax.swing.JFrame implements ActionListener,MouseListener {
     public LoginForm() {
         initComponents();
         this.setLocationRelativeTo(null);// center form in the screen
@@ -64,9 +64,8 @@ class LoginForm extends javax.swing.JFrame implements ActionListener {
         jLabelRegister.setFont(new java.awt.Font("SansSerif",2, 20)); // NOI18N
         jLabelRegister.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRegister.setText("click here to create a new account");
-        jLabelRegister.addMouseListener(new MouseAdapter(){
-            public void mouseClicked(MouseEvent evt){jLabelRegisterMouseClicked(evt);}
-        });
+        jLabelRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabelRegister.addMouseListener(this);
         
         //setLayout(new FlowLayout());
         setSize(750,500);
@@ -90,7 +89,7 @@ class LoginForm extends javax.swing.JFrame implements ActionListener {
         
     }
     
-    private void jLabelRegisterMouseClicked(java.awt.event.MouseEvent evt) {
+     void jLabelRegisterMouseClicked() {
         RegisterForm rgf = new RegisterForm();
         rgf.setVisible(true);
         rgf.pack();
@@ -134,10 +133,21 @@ class LoginForm extends javax.swing.JFrame implements ActionListener {
             
         }
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {jLabelRegisterMouseClicked();}
+    @Override
+    public void mousePressed(MouseEvent e) {}
+    @Override
+    public void mouseReleased(MouseEvent e){}
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e)  {}
 }
 
 
-class RegisterForm extends javax.swing.JFrame implements ActionListener {
+class RegisterForm extends javax.swing.JFrame implements ActionListener,MouseListener {
 
     public RegisterForm() {
         initComponents();
@@ -252,11 +262,7 @@ class RegisterForm extends javax.swing.JFrame implements ActionListener {
         jLabelRegister.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRegister.setText(" CLICK HERE to go back on LOGIN PAGE ");
         jLabelRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabelRegister.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabelRegisterMouseClicked();
-            }
-        });
+        jLabelRegister.addMouseListener(this);
         m.add(jLabelRegister);
 
         add(m);
@@ -313,6 +319,17 @@ class RegisterForm extends javax.swing.JFrame implements ActionListener {
             }
         catch(Exception eee){}
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {jLabelRegisterMouseClicked();}
+    @Override
+    public void mousePressed(MouseEvent e) {}
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
 }
 
 
