@@ -8,6 +8,8 @@ import java.util.*;
 /******************************************************************************************************************************/
 class LoginForm extends JFrame implements ActionListener,MouseListener {
     public LoginForm() {
+        new intro();
+        new success();
         initComponents();
         this.setLocationRelativeTo(null);// center form in the screen
     }
@@ -101,9 +103,13 @@ class LoginForm extends JFrame implements ActionListener,MouseListener {
                    new ErrorForLogin();return;//
                    //f.dispatchEvent(new WindowEvent(f,WindowEvent.WINDOW_CLOSING));
             } 
-            //if(!Macthedfromdb)new ErrorForLogin();return;
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+            new intro();
+            new success();
+        
+            //if(!Macthedfromdb)new ErrorForLogin();return;
+            
             NanoOOP.gg=new DashBoard(); 
              Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
              NanoOOP.gg.setLocation(dim.width/2-NanoOOP.gg.getSize().width/2, dim.height/2-NanoOOP.gg.getSize().height/2);        
@@ -535,7 +541,9 @@ class Income_Expense implements ActionListener
     JMenuItem mitem;
     JPanel p;
     DashBoard()
-    {
+   {
+       System.out.println("kaka");
+        System.out.println("mama");
         p=new JPanel(null);
         ta=new JTextArea();
         button1=new JButton();
@@ -552,7 +560,7 @@ class Income_Expense implements ActionListener
         mmb=new JMenuBar();
         menu =new JMenu();
         mitem=new JMenuItem();
-        button1.setIcon(new ImageIcon(getClass().getResource("/nanooop/plusicon.png")));
+      //  button1.setIcon(new ImageIcon(getClass().getResource("/nanooop/plusicon.png")));
         button2.setFont(new Font("Tahoma", 1, 18)); 
         button2.setForeground(new Color(0, 0, 255));
         button2.setText("Perodic Transaction");
@@ -578,8 +586,8 @@ class Income_Expense implements ActionListener
         ta.setColumns(20);
         ta.setFont(new Font("Monospaced", 0, 15));
         ta.setRows(5);
-        l6.setIcon(new ImageIcon(getClass().getResource("/nanooop/bg1.png"))); // NOI18N
-        l6.setText("");
+      //  l6.setIcon(new ImageIcon(getClass().getResource("/nanooop/bg1.png"))); // NOI18N
+      //  l6.setText("");
         menu.setText("Settings");
         mitem.setText("Sign Out");
         menu.add(mitem);
@@ -698,7 +706,8 @@ class intro extends JFrame
         pack();try {
             Thread.sleep(2000);
         } catch (InterruptedException ex) {}
-        this.dispose();
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
     }
 }
 class success extends JFrame
@@ -715,8 +724,10 @@ class success extends JFrame
         pack();
         setVisible(true);
         try {
-            Thread.sleep(6000);
+            Thread.sleep(2000);
         } catch (InterruptedException ex) {}
-        this.dispose();
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+            
     }
 }
