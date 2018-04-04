@@ -5,58 +5,98 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.sql.*;
+
+
+class OurDBmeth
+{
+     Connection conn;
+   
+    OurDBmeth() throws SQLException
+    {
+        System.out.println("in ourdb const");
+        conn = DriverManager.getConnection("jdbc:derby://localhost:1527/NanoOOP","nanooop","nanooop");
+        System.out.println("conn initialized");
+    }
+    boolean check(String uname,String pass) throws SQLException
+    {
+        System.out.println("in chek()  "+uname+pass);
+        ResultSet rs;
+        String queryString = "SELECT * FROM USER_DETAILS WHERE USERNAME LIKE '"+uname+"' AND PASSWORD LIKE '"+pass+"'";
+        System.out.println("1");
+        Statement stmt=conn.createStatement();
+        System.out.println("2");
+         rs=stmt.executeQuery(queryString);
+         System.out.println("query excecuted");
+        try{rs.next();String s=rs.getString("USERNAME");}
+        catch(SQLException ee){return false;}
+        return true;
+    }
+     void enterFreshData(String uname,String pass) throws SQLException
+    {
+        ResultSet rs;
+        String queryString="INSERT INTO USER_DETAILS(USERNAME,PASSWORD) VALUES('"+uname+"','"+pass+"')";
+        Statement stmt=conn.createStatement();
+        int rr=stmt.executeUpdate(queryString);
+    }
+    void addTransaction(int trtype,int tramount,int trindexlist,String usname,int day,int month,int year) throws SQLException
+    {
+        ResultSet rs;
+        String queryString="INSERT INTO TRANSACTION_DETAILS(TR_TYPE,TR_AMOUNT,TR_INDEX_LIST,USERNAME,DAY,MONTH,YEARR) VALUES("+trtype+","+tramount+","+trindexlist+",'"+usname+"',"+day+","+month+","+year+")";
+        Statement stmt=conn.createStatement();
+        int rr=stmt.executeUpdate(queryString);
+    }
+}
 /******************************************************************************************************************************/
-class LoginForm extends JFrame implements ActionListener,MouseListener {
+class LoginForm extends javax.swing.JFrame implements ActionListener,MouseListener {
     public LoginForm() {
-        new intro();
-        new success();
         initComponents();
         this.setLocationRelativeTo(null);// center form in the screen
     }
     private void initComponents() {
-        jLabel4 = new JLabel();
-        jLabel5 = new JLabel();
-        jTextField1 = new JTextField();
-        jPasswordField1 = new JPasswordField();
-        jButton1 = new JButton();
-        jButton2 = new JButton();
-        jLabelRegister = new JLabel();
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabelRegister = new javax.swing.JLabel();
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(true);
         JLabel title = new JLabel("PERSONAL ACCOUNTANT");
-        title.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        title.setForeground(new Color(248, 148, 6));
-        jLabel4.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        jLabel4.setForeground(new Color(236, 240, 241));
+        title.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        title.setForeground(new java.awt.Color(248, 148, 6));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(236, 240, 241));
         jLabel4.setText("Username:");
-        jLabel5.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        jLabel5.setForeground(new Color(236, 240, 241));
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(236, 240, 241));
         jLabel5.setText("Password:");
-        jTextField1.setBackground(new Color(108, 122, 137));
-        jTextField1.setFont(new Font("SansSerif", Font.BOLD, 20)); // NOI18N
-        jTextField1.setForeground(new Color(228, 241, 254));
-        jPasswordField1.setBackground(new Color(108, 122, 137));
-        jPasswordField1.setFont(new Font("SansSerif", Font.BOLD, 20)); // NOI18N
-        jPasswordField1.setForeground(new Color(228, 241, 254));
-        jButton1.setBackground(new Color(34, 167, 240));
-        jButton1.setFont(new Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setForeground(new Color(255, 255, 255));
+        jTextField1.setBackground(new java.awt.Color(108, 122, 137));
+        jTextField1.setFont(new java.awt.Font("SansSerif", Font.BOLD, 20)); // NOI18N
+        jTextField1.setForeground(new java.awt.Color(228, 241, 254));
+        jPasswordField1.setBackground(new java.awt.Color(108, 122, 137));
+        jPasswordField1.setFont(new java.awt.Font("SansSerif", Font.BOLD, 20)); // NOI18N
+        jPasswordField1.setForeground(new java.awt.Color(228, 241, 254));
+        jButton1.setBackground(new java.awt.Color(34, 167, 240));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Login");
         jButton1.addActionListener(this);
-        jButton2.setBackground(new Color(242, 38, 19));
-        jButton2.setFont(new Font("Tahoma", 1, 14)); // NOI18N
-        jButton2.setForeground(new Color(255, 255, 255));
+        jButton2.setBackground(new java.awt.Color(242, 38, 19));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Cancel");
         jButton2.addActionListener(this);
-        jLabelRegister.setFont(new Font("SansSerif",2, 15)); // NOI18N
-        jLabelRegister.setForeground(new Color(255, 255, 255));
+        jLabelRegister.setFont(new java.awt.Font("SansSerif",2, 15)); // NOI18N
+        jLabelRegister.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRegister.setText("click here to create a new account");
         jLabelRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabelRegister.addMouseListener(this);
         //setLayout(new FlowLayout());
         setSize(750,500);
         JPanel p = new JPanel(new GridLayout(9,3,0,15));
-        p.setBackground(new Color(44, 62, 80));
+        p.setBackground(new java.awt.Color(44, 62, 80));
         add(p);
         p.add(new JLabel(""));p.add(title);p.add(new JLabel(""));p.add(new JLabel(""));
         p.add(jLabel4); p.add(new JLabel(""));p.add(new JLabel(""));
@@ -103,13 +143,16 @@ class LoginForm extends JFrame implements ActionListener,MouseListener {
                    new ErrorForLogin();return;//
                    //f.dispatchEvent(new WindowEvent(f,WindowEvent.WINDOW_CLOSING));
             } 
+           try{System.out.println("in try"); OurDBmeth m=new OurDBmeth();
+               if(m.check(NanoOOP.username, NanoOOP.pass)!=true)
+           {
+               new ErrorForLogin();return;
+           }
+               }
+           catch(SQLException rrr){}
+            //if(!Macthedfromdb)new ErrorForLogin();return;
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
-            new intro();
-            new success();
-        
-            //if(!Macthedfromdb)new ErrorForLogin();return;
-            
             NanoOOP.gg=new DashBoard(); 
              Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
              NanoOOP.gg.setLocation(dim.width/2-NanoOOP.gg.getSize().width/2, dim.height/2-NanoOOP.gg.getSize().height/2);        
@@ -132,107 +175,107 @@ class LoginForm extends JFrame implements ActionListener,MouseListener {
 }
 
 /************************************************************************************************************************************************/
-class RegisterForm extends JFrame implements ActionListener,MouseListener {
+class RegisterForm extends javax.swing.JFrame implements ActionListener,MouseListener {
 
     public RegisterForm() {
         initComponents();
     }
     private void initComponents() {
-        jLabel2 = new JLabel();
-        jPanel2 = new JPanel();
-        jLabel4 = new JLabel();
-        jLabel5 = new JLabel();
-        jTextField1 = new JTextField();
-        jPasswordField1 = new JPasswordField();
-        jButtonRegister = new JButton();
-        jButton2 = new JButton();
-        jLabelRegister = new JLabel();
-        jLabel6 = new JLabel();
-        jTextField2 = new JTextField();
-        jLabel7 = new JLabel();
-        jTextField3 = new JTextField();
-        jLabel8 = new JLabel();
-        jPasswordField2 = new JPasswordField();
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jLabel2 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        jButtonRegister = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabelRegister = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jPasswordField2 = new javax.swing.JPasswordField();
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(true);
         setSize(475, 325);
         JPanel m = new JPanel(new GridLayout(8, 1));
-        m.setBackground(new Color(44, 62, 80));
+        m.setBackground(new java.awt.Color(44, 62, 80));
         JPanel ma = new JPanel(new GridLayout(1, 2));
-        ma.setBackground(new Color(248, 148, 6));
-        jLabel2.setFont(new Font("Tahoma", 1, 24)); // NOI18N
-        jLabel2.setForeground(new Color(255, 255, 255));
+        ma.setBackground(new java.awt.Color(248, 148, 6));
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Register");
-        jPanel2.setBackground(new Color(44, 62, 80));
+        jPanel2.setBackground(new java.awt.Color(44, 62, 80));
         ma.add(jLabel2);
         ma.add(new JLabel(""));
         m.add(ma);
         JPanel me = new JPanel(new GridLayout(1, 2));
-        jLabel6.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        jLabel6.setForeground(new Color(200, 100, 201));
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(200, 100, 201));
         jLabel6.setText("First Name:");
-        jTextField2.setBackground(new Color(108, 122, 137));
-        jTextField2.setFont(new Font("SansSerif", Font.BOLD, 20)); // NOI18N
-        jTextField2.setForeground(new Color(228, 241, 254));
+        jTextField2.setBackground(new java.awt.Color(108, 122, 137));
+        jTextField2.setFont(new java.awt.Font("SansSerif", Font.BOLD, 20)); // NOI18N
+        jTextField2.setForeground(new java.awt.Color(228, 241, 254));
         me.add(jLabel6);
         me.add(jTextField2);
         m.add(me);
         JPanel mf = new JPanel(new GridLayout(1, 2));
-        jLabel7.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        jLabel7.setForeground(new Color(200, 100, 201));
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(200, 100, 201));
         jLabel7.setText("Last Name:");
-        jTextField3.setBackground(new Color(108, 122, 137));
-        jTextField3.setFont(new Font("SansSerif", Font.BOLD, 20)); // NOI18N
-        jTextField3.setForeground(new Color(228, 241, 254));
+        jTextField3.setBackground(new java.awt.Color(108, 122, 137));
+        jTextField3.setFont(new java.awt.Font("SansSerif", Font.BOLD, 20)); // NOI18N
+        jTextField3.setForeground(new java.awt.Color(228, 241, 254));
         mf.add(jLabel7);
         mf.add(jTextField3);
         m.add(mf);
         JPanel mb = new JPanel(new GridLayout(1, 2));
-        jLabel4.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        jLabel4.setForeground(new Color(200, 100, 201));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(200, 100, 201));
         jLabel4.setText("Username:");
         mb.add(jLabel4);
-        jLabel5.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        jLabel5.setForeground(new Color(200, 100, 201));
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(200, 100, 201));
         jLabel5.setText("Password:");
         JPanel mc = new JPanel(new GridLayout(1, 2));
-        jTextField1.setBackground(new Color(108, 122, 137));
-        jTextField1.setFont(new Font("SansSerif", Font.BOLD, 20)); // NOI18N
-        jTextField1.setForeground(new Color(228, 241, 254));
+        jTextField1.setBackground(new java.awt.Color(108, 122, 137));
+        jTextField1.setFont(new java.awt.Font("SansSerif", Font.BOLD, 20)); // NOI18N
+        jTextField1.setForeground(new java.awt.Color(228, 241, 254));
         mb.add(jTextField1);
         m.add(mb);
-        jPasswordField1.setBackground(new Color(108, 122, 137));
-        jPasswordField1.setFont(new Font("SansSerif", Font.BOLD, 20)); // NOI18N
-        jPasswordField1.setForeground(new Color(228, 241, 254));
+        jPasswordField1.setBackground(new java.awt.Color(108, 122, 137));
+        jPasswordField1.setFont(new java.awt.Font("SansSerif", Font.BOLD, 20)); // NOI18N
+        jPasswordField1.setForeground(new java.awt.Color(228, 241, 254));
         mc.add(jLabel5);
         mc.add(jPasswordField1);
         m.add(mc);
         JPanel zz = new JPanel(new GridLayout(1, 2));
-        jLabel8.setFont(new Font("Tahoma", 0, 18)); // NOI18N
-        jLabel8.setForeground(new Color(200, 100, 201));
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(200, 100, 201));
         jLabel8.setText("Retype Pass:");
-        jPasswordField2.setBackground(new Color(108, 122, 137));
-        jPasswordField2.setFont(new Font("SansSerif", Font.BOLD, 20)); // NOI18N
-        jPasswordField2.setForeground(new Color(228, 241, 254));
+        jPasswordField2.setBackground(new java.awt.Color(108, 122, 137));
+        jPasswordField2.setFont(new java.awt.Font("SansSerif", Font.BOLD, 20)); // NOI18N
+        jPasswordField2.setForeground(new java.awt.Color(228, 241, 254));
         zz.add(jLabel8);
         zz.add(jPasswordField2);
         m.add(zz);
         JPanel md = new JPanel(new GridLayout(1, 2));
-        jButtonRegister.setBackground(new Color(34, 167, 240));
-        jButtonRegister.setFont(new Font("Tahoma", 1, 14)); // NOI18N
-        jButtonRegister.setForeground(new Color(255, 255, 255));
+        jButtonRegister.setBackground(new java.awt.Color(34, 167, 240));
+        jButtonRegister.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButtonRegister.setForeground(new java.awt.Color(255, 255, 255));
         jButtonRegister.setText("Register");
         jButtonRegister.addActionListener(this);
-        jButton2.setBackground(new Color(242, 38, 19));
-        jButton2.setFont(new Font("Tahoma", 1, 14)); // NOI18N
-        jButton2.setForeground(new Color(255, 255, 255));
+        jButton2.setBackground(new java.awt.Color(242, 38, 19));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Cancel");
         jButton2.addActionListener(this);
         md.add(jButtonRegister);
         md.add(jButton2);
         m.add(md);
-        jLabelRegister.setFont(new Font("SansSerif", Font.BOLD, 20)); // NOI18N
-        jLabelRegister.setForeground(new Color(255, 255, 255));
+        jLabelRegister.setFont(new java.awt.Font("SansSerif", Font.BOLD, 20)); // NOI18N
+        jLabelRegister.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRegister.setText(" CLICK HERE to go back on LOGIN PAGE ");
         jLabelRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabelRegister.addMouseListener(this);
@@ -248,21 +291,21 @@ class RegisterForm extends JFrame implements ActionListener,MouseListener {
         lgf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.dispose();
     }//GEN-LAST:event_jLabelRegisterMouseClicked
-    private JButton jButton2;
-    private JButton jButtonRegister;
-    private JLabel jLabel2;
-    private JLabel jLabel4;
-    private JLabel jLabel5;
-    private JLabel jLabel6;
-    private JLabel jLabel7;
-    private JLabel jLabel8;
-    private JLabel jLabelRegister;
-    private JPanel jPanel2;
-    private JPasswordField jPasswordField1;
-    private JPasswordField jPasswordField2;
-    private JTextField jTextField1;
-    private JTextField jTextField2;
-    private JTextField jTextField3;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonRegister;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabelRegister;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JPasswordField jPasswordField2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     @Override
     public void actionPerformed(ActionEvent e) {
         try{
@@ -279,7 +322,12 @@ class RegisterForm extends JFrame implements ActionListener,MouseListener {
                     NanoOOP.freshpass=null;
                     NanoOOP.freshlyregistered=false;
                     new ErrorForSignUp();return;           
-                }        
+                }   
+                if(NanoOOP.freshlyregistered==true)
+                {
+                    OurDBmeth h=new OurDBmeth();
+                    h.enterFreshData(NanoOOP.freshuname, NanoOOP.freshpass);
+                }
             dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
             //enter in database
             }
@@ -526,6 +574,8 @@ class Income_Expense implements ActionListener
               NanoOOP.month=cal2.getDate().getMonth();NanoOOP.year=1900+cal2.getDate().getYear();
               i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue(); }            
             else{NanoOOP.where=0;} //cancel
+            OurDBmeth ghg=new OurDBmeth();
+            ghg.addTransaction(NanoOOP.where, NanoOOP.amount_entered,NanoOOP.coice_in_category,NanoOOP.username, NanoOOP.date, NanoOOP.month, NanoOOP.year);
             }
         catch(Exception eee){}
     }
@@ -541,9 +591,7 @@ class Income_Expense implements ActionListener
     JMenuItem mitem;
     JPanel p;
     DashBoard()
-   {
-       System.out.println("kaka");
-        System.out.println("mama");
+    {
         p=new JPanel(null);
         ta=new JTextArea();
         button1=new JButton();
@@ -560,7 +608,7 @@ class Income_Expense implements ActionListener
         mmb=new JMenuBar();
         menu =new JMenu();
         mitem=new JMenuItem();
-      //  button1.setIcon(new ImageIcon(getClass().getResource("/nanooop/plusicon.png")));
+        button1.setIcon(new ImageIcon(getClass().getResource("/nanooop/plusicon.png")));
         button2.setFont(new Font("Tahoma", 1, 18)); 
         button2.setForeground(new Color(0, 0, 255));
         button2.setText("Perodic Transaction");
@@ -570,8 +618,8 @@ class Income_Expense implements ActionListener
         button3.setText("Full DB");        
         l1.setFont(new Font("Tahoma", 0, 18));
         l1.setText("EXPENSES↓:");
-        button4.setFont(new Font("Tahoma", 0, 15)); // NOI18N
-        button4.setForeground(new Color(0, 0, 255));
+        button4.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        button4.setForeground(new java.awt.Color(0, 0, 255));
         button4.setText("Select Month");
         l2.setFont(new Font("Tahoma", 0, 18)); 
         l2.setText("INCOME↑:");
@@ -586,8 +634,8 @@ class Income_Expense implements ActionListener
         ta.setColumns(20);
         ta.setFont(new Font("Monospaced", 0, 15));
         ta.setRows(5);
-      //  l6.setIcon(new ImageIcon(getClass().getResource("/nanooop/bg1.png"))); // NOI18N
-      //  l6.setText("");
+        l6.setIcon(new ImageIcon(getClass().getResource("/nanooop/bg1.png"))); // NOI18N
+        l6.setText("");
         menu.setText("Settings");
         mitem.setText("Sign Out");
         menu.add(mitem);
@@ -689,45 +737,4 @@ public class NanoOOP {
          Refresher r=new Refresher(gg);
          r.t.start();
     }    
-}
-
-class intro extends JFrame
-{
-    intro()
-    {
-        setUndecorated(true);
-        setVisible(true);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2-getSize().width/2-300, dim.height/2-getSize().height/2-200);
-        JLabel img =new JLabel();
-        img.setIcon(new ImageIcon(getClass().getResource("/nanooop/sign in.jpg")));
-        img.setText("");
-        add(img);
-        pack();try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {}
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
-    }
-}
-class success extends JFrame
-{
-    success()
-    {
-        setUndecorated(true);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2-getSize().width/2-300, dim.height/2-getSize().height/2-200);
-        JLabel xx =new JLabel();
-        xx.setIcon(new ImageIcon(getClass().getResource("/nanooop/intro.jpg")));
-        xx.setText("");
-        add(xx);
-        pack();
-        setVisible(true);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {}
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
-            
-    }
 }
