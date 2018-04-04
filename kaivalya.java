@@ -41,10 +41,54 @@ class OurDBmeth
     }
     void addTransaction(int trtype,int tramount,int trindexlist,String usname,int day,int month,int year) throws SQLException
     {
-        ResultSet rs;
-        String queryString="INSERT INTO TRANSACTION_DETAILS(TR_TYPE,TR_AMOUNT,TR_INDEX_LIST,USERNAME,DAY,MONTH,YEARR) VALUES("+trtype+","+tramount+","+trindexlist+",'"+usname+"',"+day+","+month+","+year+")";
+        this.incrementTRcount();
+        String q="SELECT * FROM USER_DETAILS WHERE USERNAME LIKE '"+NanoOOP.username+"'";
+        Statement s=conn.createStatement();
+        ResultSet rs=s.executeQuery(q);
+       // try{rs.next();}catch(SQLException tr){}
+        rs.next();int i=rs.getByte("TR_COUNT");
+        System.out.println("into adder");
+        String queryString="INSERT INTO TRANSACTION_DETAILS(TR_TYPE,TR_AMOUNT,TR_INDEX_LIST,USERNAME,DAY,MONTH,YEARR,COUNT) VALUES("+trtype+","+tramount+","+trindexlist+",'"+usname+"',"+day+","+month+","+year+","+i+")";
         Statement stmt=conn.createStatement();
         int rr=stmt.executeUpdate(queryString);
+    }
+    void incrementTRcount() throws SQLException
+    {
+        String queryString="UPDATE USER_DETAILS SET TR_COUNT=TR_COUNT+1 WHERE USERNAME LIKE'"+NanoOOP.username+"'";
+        Statement stmt=conn.createStatement();
+        int rr=stmt.executeUpdate(queryString);
+    }
+    int[] last7tr() throws SQLException
+    {
+        System.out.println("in last7tr");
+        int[] temp={0,0,0,0,0,0,0};
+        String q="SELECT * FROM USER_DETAILS WHERE USERNAME LIKE '"+NanoOOP.username+"'";
+        Statement s=conn.createStatement();
+        ResultSet rs=s.executeQuery(q);
+       // try{rs.next();}catch(SQLException tr){}
+        rs.next();int i=rs.getByte("TR_COUNT");
+        int itemp=i-7;
+        String query="SELECT * FROM TRANSACTION_DETAILS WHERE COUNT>="+itemp+" AND USERNAME LIKE '"+NanoOOP.username+"'";
+        Statement w=conn.createStatement();
+        ResultSet rs1=w.executeQuery(query);
+        System.out.println("execqry done");
+        rs1.next();
+        System.out.println("rs.next exec");
+        temp[0]=rs.getInt("TR_AMOUNT");
+        rs1.next();
+        temp[1]=rs.getInt("TR_AMOUNT");
+        rs1.next();
+        temp[2]=rs.getInt("TR_AMOUNT");
+        rs1.next();
+        temp[3]=rs.getInt("TR_AMOUNT");
+        rs1.next();
+        temp[4]=rs.getInt("TR_AMOUNT");
+        rs1.next();
+        temp[5]=rs.getInt("TR_AMOUNT");
+        rs1.next();
+        temp[6]=rs.getInt("TR_AMOUNT");
+        System.out.println("returned from last7tr");
+        return temp;
     }
 }
 /******************************************************************************************************************************/
@@ -465,6 +509,7 @@ class SelectMonth extends JFrame implements ActionListener
            try{ Integer i=new Integer(tf.getText());
             NanoOOP.tempyear=i.intValue();}
             catch(Exception eee){}
+           NanoOOP.gg.refresh_month_label();
            dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         }
     }
@@ -576,6 +621,8 @@ class Income_Expense implements ActionListener
             else{NanoOOP.where=0;} //cancel
             OurDBmeth ghg=new OurDBmeth();
             ghg.addTransaction(NanoOOP.where, NanoOOP.amount_entered,NanoOOP.coice_in_category,NanoOOP.username, NanoOOP.date, NanoOOP.month, NanoOOP.year);
+            int[] rr=ghg.last7tr();
+            System.out.println(rr[0]+" "+rr[1]+" "+rr[2]+" "+rr[3]+" "+rr[4]+" "+rr[5]+" "+rr[6]);
             }
         catch(Exception eee){}
     }
@@ -688,7 +735,7 @@ class Income_Expense implements ActionListener
             new LoginForm();
             dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));}
     }
-    void refresh()
+    void refresh_month_label()
     {
         l5.setText(NanoOOP.tempmonth+"-"+NanoOOP.tempyear);
         System.out.println(NanoOOP.date+" "+NanoOOP.month+" "+NanoOOP.year+" "+NanoOOP.count );
@@ -710,7 +757,7 @@ class Refresher implements Runnable
        while(true)
        {
            try{Thread.sleep(500);}catch(Exception ee){}
-           try{NanoOOP.gg.refresh();}catch(Exception eee){}
+           try{NanoOOP.gg.refresh_month_label();}catch(Exception eee){}
        }
    }
 }
@@ -735,6 +782,6 @@ public class NanoOOP {
          gg.setLocation(dim.width/2-gg.getSize().width/2, dim.height/2-gg.getSize().height/2);*/
         new LoginForm();
          Refresher r=new Refresher(gg);
-         r.t.start();
+        // r.t.start();
     }    
 }
