@@ -1,11 +1,16 @@
 package nanooop;
 
-import java.io.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.sql.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.util.Rotation;
 
 
 class OurDBmeth
@@ -52,48 +57,134 @@ class OurDBmeth
         Statement stmt=conn.createStatement();
         int rr=stmt.executeUpdate(queryString);
     }
+    String getThisMonthsIncome() throws SQLException
+    {
+        System.out.println("in getthismonthincome");
+        int income=0;
+        int t=0;
+        if(NanoOOP.tempmonth=="January"){t=0;}
+        if(NanoOOP.tempmonth=="February"){t=1;}
+        if(NanoOOP.tempmonth=="March"){t=2;}
+        if(NanoOOP.tempmonth=="April"){t=3;}
+        if(NanoOOP.tempmonth=="May"){t=4;}
+        if(NanoOOP.tempmonth=="June"){t=5;}
+        if(NanoOOP.tempmonth=="July"){t=6;}
+        if(NanoOOP.tempmonth=="August"){t=7;}
+        if(NanoOOP.tempmonth=="September"){t=8;}
+        if(NanoOOP.tempmonth=="October"){t=9;}
+        if(NanoOOP.tempmonth=="November"){t=10;}
+        if(NanoOOP.tempmonth=="December"){t=11;}
+        String query ="SELECT * FROM TRANSACTION_DETAILS WHERE MONTH="+t+" AND YEARR="+NanoOOP.tempyear+" AND USERNAME='"+NanoOOP.username+"'";
+        Statement stmt=conn.createStatement();
+        ResultSet rs=stmt.executeQuery(query);
+        System.out.println("entering while of mamamamama");
+        while(rs.next())
+        {
+            System.out.println("in while of mamamama");
+            if(rs.getInt("TR_TYPE")==1)
+            {
+                income=rs.getInt("TR_AMOUNT")+income;
+            }
+        }
+        System.out.println("mamamamamamamama"+income);
+        return income+"";
+    }
+    String getThisMonthsExpense() throws SQLException
+    {
+        System.out.println("in getthismonthexpense");
+        int expense=0;
+        int t=0;
+        if(NanoOOP.tempmonth=="January"){t=0;}
+        if(NanoOOP.tempmonth=="February"){t=1;}
+        if(NanoOOP.tempmonth=="March"){t=2;}
+        if(NanoOOP.tempmonth=="April"){t=3;}
+        if(NanoOOP.tempmonth=="May"){t=4;}
+        if(NanoOOP.tempmonth=="June"){t=5;}
+        if(NanoOOP.tempmonth=="July"){t=6;}
+        if(NanoOOP.tempmonth=="August"){t=7;}
+        if(NanoOOP.tempmonth=="September"){t=8;}
+        if(NanoOOP.tempmonth=="October"){t=9;}
+        if(NanoOOP.tempmonth=="November"){t=10;}
+        if(NanoOOP.tempmonth=="December"){t=11;}
+        String query ="SELECT * FROM TRANSACTION_DETAILS WHERE MONTH="+t+" AND YEARR="+NanoOOP.tempyear+" AND USERNAME='"+NanoOOP.username+"'";
+        System.out.println(query);
+        Statement stmt=conn.createStatement();
+        ResultSet rs=stmt.executeQuery(query);
+       
+        while(rs.next())
+        {
+            System.out.println("printing expense variable"+expense);
+            if(rs.getInt("TR_TYPE")==2)
+            {
+                expense=rs.getInt("TR_AMOUNT")+expense;
+            }
+        }
+        return expense+"";
+    }
     void incrementTRcount() throws SQLException
     {
         String queryString="UPDATE USER_DETAILS SET TR_COUNT=TR_COUNT+1 WHERE USERNAME LIKE'"+NanoOOP.username+"'";
         Statement stmt=conn.createStatement();
         int rr=stmt.executeUpdate(queryString);
     }
-    int[] last7tr() throws SQLException
+    String[] last7tr() throws SQLException
     {
         System.out.println("in last7tr");
-        int[] temp={0,0,0,0,0,0,0};
+        String mytemp1="",mytemp2="";
+        String[] temp={"","","","","","",""};
         String q="SELECT * FROM USER_DETAILS WHERE USERNAME LIKE '"+NanoOOP.username+"'";
         Statement s=conn.createStatement();
         ResultSet rs=s.executeQuery(q);
        // try{rs.next();}catch(SQLException tr){}
         rs.next();int i=rs.getByte("TR_COUNT");
+        System.out.println("qwert"+i);
         int itemp=i-7;
+        
         String query="SELECT * FROM TRANSACTION_DETAILS WHERE COUNT>="+itemp+" AND USERNAME LIKE '"+NanoOOP.username+"'";
+        System.out.println(query);
         Statement w=conn.createStatement();
         ResultSet rs1=w.executeQuery(query);
         System.out.println("execqry done");
-        rs1.next();
+        //rs1.next();
         System.out.println("rs.next exec");
-        temp[0]=rs.getInt("TR_AMOUNT");
-        rs1.next();
-        temp[1]=rs.getInt("TR_AMOUNT");
-        rs1.next();
-        temp[2]=rs.getInt("TR_AMOUNT");
-        rs1.next();
-        temp[3]=rs.getInt("TR_AMOUNT");
-        rs1.next();
-        temp[4]=rs.getInt("TR_AMOUNT");
-        rs1.next();
-        temp[5]=rs.getInt("TR_AMOUNT");
-        rs1.next();
-        temp[6]=rs.getInt("TR_AMOUNT");
+        int y=-1;
+        while(rs1.next())
+        {
+            
+            if(rs1.getInt("TR_TYPE")==2){mytemp1="EXPENSE";}
+            for(int ire=0;ire<6;ire++)
+            {
+                if(rs1.getInt("TR_TYPE")==1&&rs1.getInt("TR_INDEX_LIST")==ire)
+                {
+                    mytemp1="INCOME";
+                    if(ire==0){mytemp2="SALARY";}
+                    if(ire==1){mytemp2="BONUS";}
+                    if(ire==2){mytemp2="LOTTERY";}
+                    if(ire==3){mytemp2="ADD-ONS";}
+                }
+                if(rs1.getInt("TR_TYPE")==2&&rs1.getInt("TR_INDEX_LIST")==ire)
+                {
+                    mytemp1="EXPENSE";
+                    if(ire==0){mytemp2="FUN";}
+                    if(ire==1){mytemp2="EDUCATION";}
+                    if(ire==2){mytemp2="TRAVELLING";}
+                    if(ire==3){mytemp2="BILLS";}
+                    if(ire==4){mytemp2="RENT";}
+                    if(ire==5){mytemp2="OTHER";}
+                }
+            }
+            System.out.println("in while");
+            temp[++y]=mytemp1+"  "+rs1.getInt("TR_AMOUNT")+"  "+mytemp2+"  "+rs1.getInt("DAY")+"/"+(rs1.getInt("MONTH")+1)+"/"+rs1.getInt("YEARR");
+            System.out.println("in while after the complex statement");
+        }
         System.out.println("returned from last7tr");
         return temp;
     }
+    
 }
 /******************************************************************************************************************************/
 class LoginForm extends javax.swing.JFrame implements ActionListener,MouseListener {
-    public LoginForm() {
+    public LoginForm() { new intro(); new success();
         initComponents();
         this.setLocationRelativeTo(null);// center form in the screen
     }
@@ -197,6 +288,7 @@ class LoginForm extends javax.swing.JFrame implements ActionListener,MouseListen
             //if(!Macthedfromdb)new ErrorForLogin();return;
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+            //new success();
             NanoOOP.gg=new DashBoard(); 
              Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
              NanoOOP.gg.setLocation(dim.width/2-NanoOOP.gg.getSize().width/2, dim.height/2-NanoOOP.gg.getSize().height/2);        
@@ -617,13 +709,24 @@ class Income_Expense implements ActionListener
             { NanoOOP.where=2;NanoOOP.coice_in_category=ex_catagories.getSelectedIndex();
               NanoOOP.count++;NanoOOP.date=cal2.getDate().getDate();
               NanoOOP.month=cal2.getDate().getMonth();NanoOOP.year=1900+cal2.getDate().getYear();
-              i =new Integer(amount1.getText());NanoOOP.amount_entered= i.intValue(); }            
+              i =new Integer(amount.getText());NanoOOP.amount_entered= i.intValue();System.out.println("in expadd"); }            
             else{NanoOOP.where=0;} //cancel
             OurDBmeth ghg=new OurDBmeth();
             ghg.addTransaction(NanoOOP.where, NanoOOP.amount_entered,NanoOOP.coice_in_category,NanoOOP.username, NanoOOP.date, NanoOOP.month, NanoOOP.year);
-            int[] rr=ghg.last7tr();
-            System.out.println(rr[0]+" "+rr[1]+" "+rr[2]+" "+rr[3]+" "+rr[4]+" "+rr[5]+" "+rr[6]);
-            }
+            String[] rr=ghg.last7tr();
+            System.out.println(rr[0]);
+            System.out.println(rr[1]);
+            System.out.println(rr[2]);
+            System.out.println(rr[3]);
+            System.out.println(rr[4]);
+            System.out.println(rr[5]);
+            NanoOOP.gg.refresh_tf(rr);
+            System.out.println("finishfinishfinish");
+            NanoOOP.gg.refresh_expense_label(ghg.getThisMonthsExpense());
+            System.out.println("finishfinishfinish");
+            NanoOOP.gg.refresh_income_label(ghg.getThisMonthsIncome());
+            System.out.println("finishfinishfinish");
+           }
         catch(Exception eee){}
     }
 }
@@ -631,7 +734,7 @@ class Income_Expense implements ActionListener
  class DashBoard extends JFrame implements ActionListener
 {
     JButton button1,button2,button3,button4;
-    JLabel l1,l2,l3,l4,l5,l6,l7;
+    JLabel l1,l2,l3,l4,l5,l6,l7,tftitle;
     JTextArea ta;
     JMenuBar mmb;
     JMenu menu;
@@ -652,6 +755,7 @@ class Income_Expense implements ActionListener
         l5=new JLabel();
         l6=new JLabel();
         l7=new JLabel();
+        tftitle=new JLabel();
         mmb=new JMenuBar();
         menu =new JMenu();
         mitem=new JMenuItem();
@@ -681,18 +785,23 @@ class Income_Expense implements ActionListener
         ta.setColumns(20);
         ta.setFont(new Font("Monospaced", 0, 15));
         ta.setRows(5);
+        //ta.setEditable(false);
         l6.setIcon(new ImageIcon(getClass().getResource("/nanooop/bg1.png"))); // NOI18N
         l6.setText("");
         menu.setText("Settings");
         mitem.setText("Sign Out");
         menu.add(mitem);
         mmb.add(menu);
+        tftitle.setFont(new java.awt.Font("Tahoma", 0, 16)); 
+        tftitle.setText("INCOME/EXPENSE      AMOUNT      TYPE      DATE");
+        tftitle.setBounds(80, 270, 410, 30);
         add(p);
         setVisible(true);
         setResizable(false);
-        setSize(560,750);
+        setSize(557,750);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         p.setSize(550,800);
+        p.add(tftitle); 
         p.add(button1);
         button1.setBounds(440, 587, 110, 103);
         //p.add(button2);
@@ -734,11 +843,41 @@ class Income_Expense implements ActionListener
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             new LoginForm();
             dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));}
+         if(e.getSource()==button3)
+         {
+             Create_chart cc=new Create_chart("Pie Chart","INCOME_EXPENSE");
+             cc.pack();
+             cc.setVisible(true);
+         }
     }
     void refresh_month_label()
     {
         l5.setText(NanoOOP.tempmonth+"-"+NanoOOP.tempyear);
         System.out.println(NanoOOP.date+" "+NanoOOP.month+" "+NanoOOP.year+" "+NanoOOP.count );
+    }
+    void refresh_tf(String[] rr)
+    {
+        ta.setText(null);
+        ta.append(rr[0]+"\n");
+        ta.append(rr[1]+"\n");
+        ta.append(rr[2]+"\n");
+        ta.append(rr[3]+"\n");
+        ta.append(rr[4]+"\n");
+        ta.append(rr[5]+"\n");
+        ta.append(rr[6]+"\n");
+        System.out.println("finished refresh ta");
+    }
+    void refresh_expense_label(String tt)
+    {
+        System.out.println("in expense label refresher");
+        l3.setText(tt);
+        System.out.println("leaving expense label refresher");
+    }
+    void refresh_income_label(String tt)
+    {
+        System.out.println("in income label refresher");
+        l4.setText(tt);
+        System.out.println("leaving income label refresher");
     }
 }
 
@@ -777,11 +916,78 @@ public class NanoOOP {
     static DashBoard gg;
     public static void main(String[] args) 
     {
+        
         /* DashBoard gg=new DashBoard();
          Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
          gg.setLocation(dim.width/2-gg.getSize().width/2, dim.height/2-gg.getSize().height/2);*/
         new LoginForm();
-         Refresher r=new Refresher(gg);
+         Refresher r=new Refresher(gg); 
         // r.t.start();
     }    
+}
+
+class intro extends JFrame
+{
+    intro()
+    {
+        setUndecorated(true);
+        setVisible(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(dim.width/2-getSize().width/2-300, dim.height/2-getSize().height/2-200);
+        JLabel img =new JLabel();
+        img.setIcon(new ImageIcon(getClass().getResource("/nanooop/sign in.jpg")));
+        img.setText("");
+        add(img);
+        pack();try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {}
+        this.dispose();
+    }
+}
+class success extends JFrame
+{
+    success()
+    {
+        setUndecorated(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(dim.width/2-getSize().width/2-300, dim.height/2-getSize().height/2-200);
+        JLabel xx =new JLabel();
+        xx.setIcon(new ImageIcon(getClass().getResource("/nanooop/intro.jpg")));
+        xx.setText("");
+        add(xx);
+        pack();
+        setVisible(true);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {}
+        this.dispose();
+    }
+}       
+
+class Create_chart extends JFrame
+{
+    Create_chart(String title,String chart_title)
+    {
+        PieDataset dataset = createDatabase();
+        JFreeChart chart =  createChart(dataset,chart_title);
+        ChartPanel chart_panel = new ChartPanel(chart);
+        chart_panel.setPreferredSize(new Dimension(500,300));
+        setContentPane(chart_panel);
+    }
+    PieDataset createDatabase()
+    {
+        DefaultPieDataset result = new DefaultPieDataset();
+        result.setValue("INCOME",40);//percentage IN PLACE OF 0
+        result.setValue("EXPENSE",60);//PERCENTAGE IN PLACE OF 0 
+        return result;
+    }
+    JFreeChart createChart(PieDataset dataset,String title)
+    {
+        JFreeChart chart = ChartFactory.createPieChart3D(title, dataset);
+        PiePlot3D plot = (PiePlot3D) chart.getPlot();
+        plot.setStartAngle(0);
+        plot.setDirection(Rotation.CLOCKWISE);
+        plot.setForegroundAlpha(0.5f);
+        return chart;
+    }
 }
